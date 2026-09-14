@@ -1,0 +1,49 @@
+generated: '2026-09-14'
+method: searched
+source: >-
+  https://www.aidentified.com/platform/product-overview---saas-signup#pricing, the Aidentified
+  support help center (searched for API/rate/limit/throttle on 2026-09-14), and the provider's own
+  Apache-2.0 client at https://github.com/aidentified-llc/matching-api-cli.
+checked: '2026-09-14'
+limit_count: 0
+headers_published: false
+status_on_exhaustion: null
+summary: >-
+  Aidentified publishes NO request rate limits of any kind — no per-key, per-account or per-endpoint
+  limit, no window, no burst, and no response headers. An honest zero, probed and recorded rather
+  than assumed. The first-party client neither reads nor honours any RateLimit-*, X-RateLimit-* or
+  Retry-After header, and no retry/backoff logic exists in it, which is consistent with a server
+  that signals nothing.
+
+limits: []
+
+response_headers:
+  observed: []
+  documented: []
+  note: >-
+    Unauthenticated requests to matching-api.aidentified.com return 403 "Missing Authentication
+    Token" (an AWS API Gateway response) with no rate-limit headers, so nothing could be observed
+    anonymously either.
+
+quotas:
+  note: >-
+    What Aidentified DOES meter is prepaid credits per plan, not requests per second. These are
+    entitlement quotas, not rate limits, and are recorded in plans/aidentified-plans-pricing.yml.
+  published:
+    - plan: Starter
+      credits: 125
+      period: month
+    - plan: Premium
+      credits: 5000
+      period: year
+    - plan: Enterprise
+      credits: volume-based
+  also_capped:
+    - Import records per plan (75,000 on Starter and Premium; unlimited on Enterprise)
+    - Import files per plan (50 on Starter and Premium; unlimited on Enterprise)
+    - Saved searches per plan (100 on Starter and Premium; unlimited on Enterprise)
+
+agent_impact: >-
+  An agent calling Aidentified has no runtime signal to pace itself with: no limit to read ahead of
+  time, no header to read during a run, and no documented status code or Retry-After to back off on.
+  The only budget it can reason about is a credit balance it cannot query through any public API.

@@ -1,0 +1,47 @@
+generated: '2026-09-14'
+method: probed
+source: https://trust.aidentified.com
+checked: '2026-09-14'
+present: true
+url: https://trust.aidentified.com
+http_status: 200
+platform:
+  vendor: Vanta
+  basis: >-
+    trust.aidentified.com is a CNAME to 603930bea181ea14b178f898.cname.vantatrust.com, the served
+    HTML carries data-signature-manifest-url pointing at assets.vanta.com, and the og:image is served
+    from app.vanta.com.
+title: Aidentified Trust Center
+description: >-
+  "Aidentified is a Wealth Network Intelligence™ platform that helps financial advisors and
+  enterprises find warm paths to the right people at the right moment. Because our customers rely on
+  us to handle data responsibly, we've made privacy, security, compliance, and responsible AI central
+  to our platform. Our Trust Center is where you can explore how we protect the information entrusted
+  to us." — served verbatim in the page's meta description.
+topics_named_in_served_html:
+  - privacy
+  - security
+  - compliance
+  - responsible AI
+certifications_listed:
+  readable: false
+  note: >-
+    The trust center is a client-rendered Vanta single-page app. The served HTML is a 6,453-byte
+    shell containing the title and meta description only; the certification list, policy documents
+    and subprocessor register exist only after script execution. No certification could be read
+    without executing JavaScript, so none is asserted here.
+corroborating_claims:
+  - framework: SOC 2
+    source: https://www.aidentified.com/terms-conditions
+    quote: >-
+      "...in line with the Aidentified's security policies, which are SOC2 compliant."
+    note: >-
+      This is a first-party claim in a publicly served contract document, independent of the trust
+      center. It is the basis for the Compliance pointer.
+related:
+  privacy_policy: https://www.aidentified.com/privacy--policy
+  terms: https://www.aidentified.com/terms-conditions
+  consumer_rights:
+    - https://www.aidentified.com/see-my-data
+    - https://www.aidentified.com/delete-my-data
+    - https://www.aidentified.com/virginia-privacy-rights

@@ -1,0 +1,74 @@
+generated: '2026-09-14'
+method: searched
+source: >-
+  Registry sweeps on 2026-09-14 of PyPI (pypi.org/pypi/<pkg>/json), npm (registry.npmjs.org search),
+  RubyGems, crates.io, and the GitHub organisation https://github.com/aidentified-llc. Versions and
+  publish dates read from the PyPI JSON metadata endpoint.
+summary:
+  first_party_sdk_count: 1
+  third_party_package_count: 0
+  registries_searched:
+    - pypi
+    - npm
+    - rubygems
+    - crates.io
+    - github (aidentified-llc org)
+  note: >-
+    Aidentified publishes exactly one client library, in one language, covering one of its APIs. The
+    GitHub organisation aidentified-llc contains a single public repository — the Python CLI that
+    wraps the bulk contact-matching API. There is no JavaScript, Java, Go, Ruby, .NET or PHP client,
+    and nothing at all for the MCP server or the realtime enrichment API.
+
+packages:
+  - name: aidentified-matching-api
+    registry: pypi
+    url: https://pypi.org/project/aidentified-matching-api/
+    repository: https://github.com/aidentified-llc/matching-api-cli
+    language: python
+    official: true
+    official_basis: >-
+      Published under the aidentified-llc GitHub organisation, copyright "Aidentified LLC" in every
+      source header, Apache-2.0 licensed, and it targets matching-api.aidentified.com by default.
+    covers: Bulk contact matching and enrichment API (dataset / dataset-file / delta / trigger files)
+    install: python -m pip install aidentified-matching-api
+    entry_point: aidentified_match
+    kind: cli+library
+    version: 1.2.0
+    published: '2023-06-21'
+    python_requires: '>=3.10'
+    license: Apache-2.0
+    release_history:
+      - version: 1.0.0
+        published: '2022-02-16'
+      - version: 1.1.0
+        published: '2022-03-03'
+      - version: 1.1.1
+        published: '2022-08-24'
+      - version: 1.1.2
+        published: '2022-10-03'
+      - version: 1.1.3
+        published: '2023-03-29'
+      - version: 1.2.0
+        published: '2023-06-21'
+    currency_finding: >-
+      DECAY SIGNAL. The last PyPI release is 1.2.0 on 2023-06-21 — over three years stale as of this
+      pass — while the backing GitHub repository was last pushed 2026-06-04. The published artifact
+      an integrator actually installs is years behind the source, and it predates the entire MCP
+      surface Aidentified now runs at mcp.aidentified.com. A consumer installing from PyPI today
+      gets a 2023 client.
+
+absent:
+  - registry: npm
+    searched: 'registry.npmjs.org/-/v1/search?text=aidentified'
+    result: 0 packages
+  - registry: rubygems
+    searched: 'rubygems.org/api/v1/search.json?query=aidentified'
+    result: 0 gems
+  - registry: crates.io
+    searched: 'crates.io/api/v1/crates?q=aidentified'
+    result: 0 crates
+  - registry: npm
+    target: MCP stdio server package
+    result: >-
+      None. Aidentified's MCP server is remote-only (https://mcp.aidentified.com/mcp); no npx/stdio
+      package is distributed.

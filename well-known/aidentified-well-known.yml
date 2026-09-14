@@ -1,0 +1,138 @@
+generated: '2026-09-14'
+method: probed
+source: live /.well-known/ probes across every Aidentified host known to this record
+checked: '2026-09-14'
+summary: >-
+  Aidentified serves four real .well-known documents, and every one of them sits on a host OTHER
+  than the primary domain. The MCP host publishes RFC 9728 protected-resource metadata (at the
+  resource-scoped path /.well-known/oauth-protected-resource/mcp, not the bare path), and that
+  document names https://login.aidentified.com/ as the authorization server — a third host, which
+  in turn serves RFC 8414 authorization-server metadata, OpenID Connect discovery, and a live JWKS.
+  Probing only www.aidentified.com would have scored this provider zero on documents it genuinely
+  publishes.
+pointer_basis: >-
+  WellKnown pointer earned on the strength of four HTTP 200 responses carrying real JSON documents
+  (RFC 9728, RFC 8414, OIDC discovery, JWKS). SecurityTxt pointer NOT emitted — RFC 9116 is
+  unimplemented on every host probed.
+false_positive_watch: >-
+  app.aidentified.com answers HTTP 200 with the application SPA shell (4,728 bytes of HTML,
+  byte-identical to the app root) for EVERY /.well-known/* path, including paths that cannot exist.
+  Those 200s are recorded below as MISSES, not hits. Any future round that credits an
+  app.aidentified.com /.well-known/ 200 as a served document is wrong.
+hosts:
+  - host: https://mcp.aidentified.com
+    documents:
+      - path: /.well-known/oauth-protected-resource/mcp
+        status: 200
+        content_type: application/json
+        file: aidentified-mcp-oauth-protected-resource.json
+        note: >-
+          RFC 9728. resource https://mcp.aidentified.com/mcp; authorization_servers
+          ["https://login.aidentified.com/"]; bearer_methods_supported ["header"];
+          scopes_supported is an empty array.
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/security.txt
+        status: 404
+  - host: https://login.aidentified.com
+    documents:
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        content_type: application/json
+        file: aidentified-login-oauth-authorization-server.json
+        note: >-
+          RFC 8414. issuer https://login.aidentified.com; PKCE S256 only; grant types
+          authorization_code, refresh_token, urn:ietf:params:oauth:grant-type:jwt-bearer;
+          dynamic client registration endpoint published (RFC 7591).
+      - path: /.well-known/openid-configuration
+        status: 200
+        content_type: application/json
+        file: aidentified-login-openid-configuration.json
+      - path: /.well-known/jwks.json
+        status: 200
+        content_type: application/json
+        file: aidentified-login-jwks.json
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+    note: >-
+      login.aidentified.com is a CNAME to substantial-fig-5730.customers.stytch.com — Stytch
+      operates the identity service under Aidentified's own domain, and the JWKS x5c certificate
+      carries O=Stytch. The issuer, the endpoints and the domain are Aidentified's, so these are
+      recorded as Aidentified-published documents.
+  - host: https://api.aidentified.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://matching-api.aidentified.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+  - host: https://www.aidentified.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+    note: >-
+      Webflow-hosted. Every miss returns a 404 carrying the body "Invalid .well-known request".
+  - host: https://aidentified.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+  - host: https://app.aidentified.com
+    documents:
+      - path: /.well-known/agent-card.json
+        status: 200
+        content_type: text/html
+        hit: false
+        note: SPA catch-all. HTML shell identical to the app root — NOT a document.
+      - path: /.well-known/security.txt
+        status: 200
+        content_type: text/html
+        hit: false
+        note: SPA catch-all. HTML shell identical to the app root — NOT a document.
+      - path: /.well-known/api-catalog
+        status: 200
+        content_type: text/html
+        hit: false
+        note: SPA catch-all. HTML shell identical to the app root — NOT a document.
+  - host: https://support.aidentified.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404

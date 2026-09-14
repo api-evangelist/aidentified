@@ -1,0 +1,153 @@
+generated: '2026-09-14'
+method: derived
+source: >-
+  https://github.com/aidentified-llc/matching-api-cli — Aidentified's own Apache-2.0 client for the
+  bulk contact-matching API (README.md plus aidentified_matching_api/*.py), cloned and read on
+  2026-09-14. Cross-checked against live probes of matching-api.aidentified.com and the OAuth
+  discovery documents under well-known/. Aidentified publishes no API reference, so these
+  conventions are reconstructed from the client the provider itself ships, not from documentation.
+base_url: https://matching-api.aidentified.com
+api_style: REST over HTTPS, JSON request and response bodies, trailing-slash collection paths
+
+authentication:
+  scheme: Bearer JWT obtained from POST /login with an account email and password
+  header: 'Authorization: Bearer <token>'
+  expiry: Server-supplied expires_in (seconds); the first-party CLI caches and reuses until expiry.
+  detail: authentication/aidentified-authentication.yml
+
+versioning:
+  scheme: path
+  mechanism: Every documented resource path is prefixed /v1/
+  current: v1
+  header_negotiation: none observed
+  detail: lifecycle/aidentified-lifecycle.yml
+
+pagination:
+  style: page-cursor (Django REST Framework shaped)
+  response_fields:
+    results: array of records for the current page
+    next: absolute URL of the next page, or null when exhausted
+  request_params:
+    note: >-
+      The client follows the query string returned in `next` rather than constructing page
+      parameters itself, so the parameter names are not exposed by the published client.
+  auto_pagination: >-
+    The CLI's paginated_api_call helper walks `next` until it is null and concatenates `results`.
+  evidence: aidentified_matching_api/token_service.py::paginated_api_call
+
+filtering:
+  supported: true
+  mechanism: >-
+    Query parameters on collection endpoints — the CLI resolves a dataset or dataset-file by name
+    via GET /v1/dataset/ and GET /v1/dataset-file/ with name parameters.
+  evidence: aidentified_matching_api/get_id.py
+
+field_expansion:
+  supported: false
+  note: Not present in the published client or any Aidentified document.
+
+metadata:
+  supported: false
+  note: >-
+    Datasets and dataset-files carry a customer-chosen `name`, but there is no arbitrary key-value
+    metadata facility.
+
+request_tracing:
+  request_id_header: null
+  note: >-
+    No request-id header is read or logged by the first-party client for the matching API. The
+    Stytch-backed auth host DOES return a request_id field in its JSON bodies
+    (request-id-live-<uuid>), which is the only correlation identifier observed anywhere.
+
+error_envelope:
+  media_type: application/json
+  format: vendor-specific
+  rfc9457: false
+  shape: >-
+    The client raises on a non-2xx status and surfaces the decoded JSON body alongside the status
+    code. No stable envelope (no `type`/`title`/`detail`, no error code registry) is published, and
+    validation failures for uploaded files are surfaced as a free-text message on the dataset-file
+    record rather than as an API error.
+  detail: null
+  note: >-
+    No error catalog artifact is emitted for this provider. There is no OpenAPI to derive 4xx/5xx
+    responses from and no published error reference to search — an honest absence.
+
+rate_limit_signaling:
+  headers_observed: []
+  documented: false
+  status_on_exhaustion: null
+  detail: rate-limits/aidentified-rate-limits.yml
+  note: >-
+    No RateLimit-*, X-RateLimit-* or Retry-After header is read by the first-party client and none
+    is documented. Consumption is governed by a prepaid credit balance per plan, not by a published
+    request rate.
+
+idempotency:
+  supported: false
+  coverage: none
+  mechanism: null
+  applies_to: null
+  docs: null
+  assessment: >-
+    No Idempotency-Key header, no client-supplied request identifier, and no replay semantics appear
+    anywhere in the first-party client, the help center or the discovery documents. The mutating
+    surface — POST /v1/dataset/, POST /v1/dataset-file/, and the three upload lifecycle transitions
+    — offers no replay protection, so an agent that retries a create after a timeout will create a
+    duplicate. Recorded as `none` on evidence, not as an unchecked gap.
+
+reversibility:
+  grade: documented
+  applies: true
+  summary: >-
+    Two real reversal paths exist and are documented in the provider's own README, but neither
+    carries a stated time window, so this grades `documented` rather than `verified`.
+  write_surfaces:
+    - operation: POST /v1/dataset/
+      description: Create a dataset (a customer-defined grouping of dataset-files).
+      reversal: DELETE /v1/dataset/{dataset_id}/
+      reversal_command: aidentified_match dataset delete
+      window: null
+      window_source: null
+      note: Deletion is documented as available; no retention or undo window is stated.
+    - operation: POST /v1/dataset-file/
+      description: Create a dataset-file record ahead of a CSV upload.
+      reversal: DELETE /v1/dataset-file/{dataset_file_id}/
+      reversal_command: aidentified_match dataset-file delete
+      window: null
+      window_source: null
+      note: >-
+        The README states a dataset-file becomes IMMUTABLE once its upload finishes — it can be
+        deleted and replaced, but not edited. Deletion is therefore the only reversal.
+    - operation: POST /v1/dataset-file/{id}/initiate-upload/
+      description: Begin a multipart CSV upload.
+      reversal: POST /v1/dataset-file/{id}/abort-upload/
+      reversal_command: aidentified_match dataset-file upload (aborts automatically on failure)
+      window: >-
+        Before the upload completes. The README states that aborting returns the dataset-file to
+        UPLOAD_NOT_STARTED and removes any partially uploaded parts, and that once the state reaches
+        VALIDATION_IN_PROGRESS it is no longer possible to return to UPLOAD_NOT_STARTED.
+      window_source: https://github.com/aidentified-llc/matching-api-cli#data-model
+      note: >-
+        This is the one reversal with a genuinely stated boundary — a state-machine boundary rather
+        than a clock. It is why the grade is `documented` and not `none`.
+  irreversible:
+    - >-
+      The initial whole-file match runs exactly ONCE, immediately after upload, and cannot be
+      re-run — the README is explicit about this. Getting a fresh whole-file match requires
+      uploading a new dataset-file and spending the credits again.
+    - Credit consumption. No published refund, void or reversal path for spent credits.
+
+dry_run_mode:
+  supported: false
+  note: >-
+    No preview, validate-only or dry-run parameter appears in the first-party client. The nearest
+    equivalent is server-side CSV validation (VALIDATION_IN_PROGRESS / VALIDATION_ERROR), which runs
+    only after the upload is already committed.
+
+cross_references:
+  authentication: authentication/aidentified-authentication.yml
+  scopes: scopes/aidentified-scopes.yml
+  lifecycle: lifecycle/aidentified-lifecycle.yml
+  data_model: data-model/aidentified-data-model.yml
+  rate_limits: rate-limits/aidentified-rate-limits.yml

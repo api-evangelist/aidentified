@@ -1,0 +1,105 @@
+generated: '2026-09-14'
+method: searched
+source: >-
+  https://github.com/aidentified-llc/matching-api-cli (README.md and
+  aidentified_matching_api/__init__.py), cloned and read 2026-09-14, plus
+  https://pypi.org/project/aidentified-matching-api/.
+name: aidentified_match
+description: >-
+  A first-party command-line wrapper around Aidentified's bulk contact matching API. It is the only
+  officially supported way to drive the matching API without writing a client, and the provider
+  positions it as "the easiest way to get up and running with Aidentified if you have a CSV file
+  ready for matching".
+official: true
+license: Apache-2.0
+language: python
+binary: aidentified_match
+package: packages/aidentified-packages.yml
+
+install:
+  - method: pip
+    command: python -m pip install aidentified-matching-api
+    requires: Python 3.10+ (setup.py python_requires; the README still says 3.6+)
+
+configuration:
+  credentials:
+    - flag: --email
+      env: AID_EMAIL
+    - flag: --password
+      env: AID_PASSWORD
+  endpoint_override:
+    env: AIDENTIFIED_URL
+    default: https://matching-api.aidentified.com
+  token_cache: >-
+    A bearer token is cached under the user cache directory, keyed by a CRC32 of the endpoint URL,
+    and reused until the server-supplied expiry.
+
+commands:
+  - group: auth
+    description: Print the JWT bearer token for the configured account.
+    subcommands:
+      - name: (default)
+        description: Exchange email/password for a token and print it.
+        flags: ['--clear-cache']
+  - group: dataset
+    description: Manage datasets, the customer-defined grouping of uploaded contact files.
+    subcommands:
+      - name: list
+        description: List datasets under the account.
+        api: GET /v1/dataset/
+      - name: create
+        description: Create a dataset.
+        api: POST /v1/dataset/
+        flags: ['--name']
+      - name: delete
+        description: Delete a dataset.
+        api: DELETE /v1/dataset/{dataset_id}/
+        flags: ['--name']
+  - group: dataset-file
+    description: Manage the CSV files uploaded for matching and enrichment.
+    subcommands:
+      - name: list
+        description: List dataset-files and their state-machine status.
+        api: GET /v1/dataset-file/
+      - name: create
+        description: Create a dataset-file record.
+        api: POST /v1/dataset-file/
+      - name: upload
+        description: >-
+          Multipart-upload a CSV, translating encoding/quoting/delimiter on the fly via the --csv-
+          options, and aborting the upload automatically on failure.
+        api: POST /v1/dataset-file/{id}/initiate-upload/, /v1/dataset-file-upload-part/, .../complete-upload/
+      - name: download
+        description: Download the fully-matched output file.
+      - name: delete
+        description: Delete a dataset-file.
+        api: DELETE /v1/dataset-file/{dataset_file_id}/
+  - group: dataset-delta-file
+    description: List and download the nightly delta files of changed contact attributes.
+    api: GET /v1/dataset-delta-file/
+  - group: trigger-file
+    description: List and download the nightly Money in Motion / wealth-trigger files.
+    api: GET /v1/trigger-file/
+
+key_flows:
+  - name: First match
+    steps:
+      - aidentified_match dataset create --name <dataset>
+      - aidentified_match dataset-file create --dataset-name <dataset> --name <file.csv>
+      - aidentified_match dataset-file upload --dataset-name <dataset> --dataset-file-name <file.csv> --file <path>
+      - Wait for status MATCHING_FINISHED
+      - aidentified_match dataset-file download --dataset-name <dataset> --dataset-file-name <file.csv>
+  - name: Stay current
+    steps:
+      - aidentified_match dataset-delta-file list --dataset-name <dataset>
+      - aidentified_match dataset-delta-file download ...
+      - aidentified_match trigger-file list / download ...
+    note: >-
+      Required, not optional. The whole-file match runs only once; delta and trigger files are the
+      only way to keep enriched attributes and wealth events current.
+
+currency:
+  latest_release: 1.2.0
+  released: '2023-06-21'
+  repo_last_push: '2026-06-04'
+  note: The installable release is three years older than the source repository.

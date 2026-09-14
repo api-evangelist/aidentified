@@ -64,5 +64,11 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Aidentified is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.nasdaqprivatemarket.com/
+Aidentified is a Wealth Network Intelligence platform for financial advisors, wealth managers, insurance brokers, investment banks and non-profits. Founded in 2017 and headquartered in Boston, it maps a user's existing relationships against more than 300 million professional and consumer profiles and over 16 billion connections to surface the warmest introduction path to any prospect, and monitors 16 wealth events that signal when to reach out.
+
+Its machine surface is a bulk contact matching and enrichment API at `matching-api.aidentified.com`, a marketed realtime enrichment API, and a live OAuth-protected Model Context Protocol server at `mcp.aidentified.com`. API access is arranged through a sales representative, and no public API reference or OpenAPI is published.
+
+- https://www.aidentified.com/
+- https://github.com/aidentified-llc
+- https://support.aidentified.com/hc/en-us
+- https://trust.aidentified.com

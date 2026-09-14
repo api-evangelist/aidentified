@@ -1,0 +1,93 @@
+generated: '2026-09-14'
+method: searched
+source: https://www.aidentified.com/platform/product-overview---saas-signup#pricing
+checked: '2026-09-14'
+currency: USD
+plan_count: 3
+summary: >-
+  Aidentified publishes three self-serve SaaS tiers with real posted prices. NONE of them includes
+  API access: the API is an Enterprise/DaaS motion arranged through a sales representative, and the
+  help center answer to "How can I get an API key/token?" is, verbatim, "For all Aidentified API
+  inquiries, please contact your sales representative." So the pricing that IS published prices the
+  application, not the API.
+billing_unit: per user per month
+consumption_model: >-
+  Prepaid credits, not request rate. Credits are spent on data enrichment and export; the tiers
+  differ mainly in credit allowance and integration entitlements.
+
+plans:
+  - name: Starter
+    price: 49
+    currency: USD
+    period: month
+    unit: per user
+    included:
+      credits: 125
+      credits_period: month
+      saved_searches: 100
+      import_records: 75000
+      import_files: 50
+      wealth_triggers: 16
+    features:
+      - Locations & Properties information
+      - Wealth & Income information
+    crm_integrations: 0
+    api_access: false
+    overage: not published
+
+  - name: Premium
+    price: 199
+    currency: USD
+    period: month
+    unit: per user
+    popular: true
+    included:
+      credits: 5000
+      credits_period: year
+      saved_searches: 100
+      import_records: 75000
+      import_files: 50
+      wealth_triggers: 16
+    features:
+      - Locations & Properties information
+      - Wealth & Income information
+    crm_integrations: 1
+    crm_integrations_note: One free CRM integration included.
+    api_access: false
+    overage: not published
+
+  - name: Enterprise
+    price: null
+    price_model: custom
+    currency: USD
+    period: month
+    unit: per user
+    included:
+      credits: volume-based
+      saved_searches: unlimited
+      import_records: unlimited
+      import_files: unlimited
+      wealth_triggers: 16
+    features:
+      - Locations & Properties information
+      - Wealth & Income information
+      - Standard integrations included
+      - SSO
+      - Dedicated onboarding
+      - Expedited support
+    crm_integrations: standard integrations included
+    api_access: contact sales
+    overage: not published
+    contact: https://www.aidentified.com/request-demo
+
+api_pricing:
+  published: false
+  gate: sales
+  evidence:
+    - url: https://support.aidentified.com/hc/en-us/articles/52599228720532-How-can-I-get-an-API-key-token
+      quote: For all Aidentified API inquiries, please contact your sales representative.
+      checked: '2026-09-14'
+  note: >-
+    A separate DaaS (data-as-a-service) platform page exists at
+    https://www.aidentified.com/platform/product-overview---daas but carries no posted prices either.
+    There is no published price, quota or overage for API or MCP consumption.

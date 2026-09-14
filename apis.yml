@@ -1,23 +1,127 @@
 aid: aidentified
 name: Aidentified
-description: 'Aidentified is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Aidentified is a Wealth Network Intelligence platform for financial advisors, wealth managers,
+  insurance brokers, investment banks and non-profits. Founded in 2017 and headquartered in Boston,
+  it maps a user's existing relationships against more than 300 million professional and consumer
+  profiles and over 16 billion connections to surface the warmest introduction path to any prospect,
+  and it monitors 16 wealth events — job changes, liquidity events, insider stock purchases,
+  acquisitions, property transactions and IPO filings — that signal when to reach out. Its machine
+  surface is a bulk contact matching and enrichment API at matching-api.aidentified.com, a marketed
+  realtime enrichment API, and a live OAuth-protected Model Context Protocol server at
+  mcp.aidentified.com. API access is arranged through a sales representative and no public API
+  reference or OpenAPI is published.
+image: https://cdn.prod.website-files.com/684cc996f51fd9e61fd926ba/684f6ebd6781811cd93569ed_logo-aidentified-cube-grad-webclip.png
 url: https://raw.githubusercontent.com/api-evangelist/aidentified/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
+position: Producing
 specificationVersion: '0.20'
 created: '2026-09-14'
 modified: '2026-09-14'
 tags:
 - Company
-apis: []
+- Data Enrichment
+- Wealth Management
+- Financial Services
+- Relationship Intelligence
+- Sales Intelligence
+- Prospecting
+- Contact Data
+- Identity Resolution
+- MCP
+apis:
+- name: Aidentified Contact Matching API
+  description: >-
+    Bulk contact matching and enrichment. A customer creates a dataset, uploads a UTF-8 CSV of
+    contacts as a dataset-file via a multipart upload, and Aidentified matches and enriches every
+    record once. Thereafter a nightly delta file carries only the contacts whose attributes changed,
+    and a nightly trigger file carries the most recent Money in Motion wealth events for each matched
+    contact. Authenticated with a bearer JWT exchanged for an account email and password. No public
+    OpenAPI is published; the surface documented here is reconstructed from Aidentified's own
+    Apache-2.0 client library.
+  humanURL: https://www.aidentified.com/platform/platform-capabilities
+  baseURL: https://matching-api.aidentified.com
+  image: https://cdn.prod.website-files.com/684cc996f51fd9e61fd926ba/684f6ebd6781811cd93569ed_logo-aidentified-cube-grad-webclip.png
+  tags:
+  - Data Enrichment
+  - Contact Data
+  - Identity Resolution
+  properties:
+  - type: SourceCode
+    url: https://github.com/aidentified-llc/matching-api-cli
+  - type: Authentication
+    url: authentication/aidentified-authentication.yml
+  - type: Conventions
+    url: conventions/aidentified-conventions.yml
+  - type: DataModel
+    url: data-model/aidentified-data-model.yml
+  - type: CLI
+    url: cli/aidentified-cli.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/aidentified-domain-security.yml
 - type: Website
-  url: https://www.nasdaqprivatemarket.com/
+  url: https://www.aidentified.com/
+- type: DeveloperPortal
+  url: https://www.aidentified.com/platform/platform-capabilities
+- type: Documentation
+  url: https://support.aidentified.com/hc/en-us
+- type: Support
+  url: https://support.aidentified.com/hc/en-us
+- type: HelpCenter
+  url: https://support.aidentified.com/hc/en-us
+- type: GitHubOrganization
+  url: https://github.com/aidentified-llc
+- type: Pricing
+  url: https://www.aidentified.com/platform/product-overview---saas-signup
+- type: SignUp
+  url: https://app.aidentified.com/vip/register
+- type: Login
+  url: https://app.aidentified.com/
+- type: TermsOfService
+  url: https://www.aidentified.com/terms-conditions
+- type: PrivacyPolicy
+  url: https://www.aidentified.com/privacy--policy
+- type: TrustCenter
+  url: https://trust.aidentified.com
+- type: Compliance
+  url: security/aidentified-trust-center.yml
+- type: MCPServer
+  url: mcp/aidentified-mcp.yml
+- type: WellKnown
+  url: well-known/aidentified-well-known.yml
+- type: Authentication
+  url: authentication/aidentified-authentication.yml
+- type: OAuthScopes
+  url: scopes/aidentified-scopes.yml
+- type: Conventions
+  url: conventions/aidentified-conventions.yml
+- type: Conformance
+  url: conformance/aidentified-conformance.yml
+- type: Lifecycle
+  url: lifecycle/aidentified-lifecycle.yml
+- type: DataModel
+  url: data-model/aidentified-data-model.yml
+- type: Packages
+  url: packages/aidentified-packages.yml
+- type: SDKs
+  url: packages/aidentified-packages.yml
+- type: CLI
+  url: cli/aidentified-cli.yml
+- type: Plans
+  url: plans/aidentified-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/aidentified-rate-limits.yml
+- type: LLMsTxt
+  url: llms/aidentified-llms.txt
+x-enrichment:
+  date: '2026-09-14'
+  status: enriched
+  artifacts_added: 19
+  pass: local-v3

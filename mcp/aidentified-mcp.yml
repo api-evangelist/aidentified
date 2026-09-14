@@ -1,0 +1,82 @@
+generated: '2026-09-14'
+method: probed
+status: published
+source: >-
+  https://mcp.aidentified.com/mcp — probed directly on 2026-09-14. A GET returns HTTP 405 Method
+  Not Allowed; a JSON-RPC POST (initialize and tools/list) returns HTTP 401 with a
+  WWW-Authenticate: Bearer resource_metadata="https://mcp.aidentified.com/.well-known/oauth-protected-resource/mcp"
+  challenge and an mcp-session-id header. That is a live, correctly-implemented, OAuth-protected
+  MCP server, not a guessed path.
+discovery: >-
+  The endpoint is NOT documented anywhere on aidentified.com, in the support help center, or in any
+  public directory searched on 2026-09-14. It was found by host probing and confirmed by the
+  RFC 9728 protected-resource document the server itself points at. Aidentified ships a real agent
+  surface and does not advertise it.
+
+deployment:
+  mode: remote
+  endpoint: https://mcp.aidentified.com/mcp
+  auth: oauth
+  verified: probed
+  note: >-
+    Remote HTTP transport only. No npx/stdio package is published for Aidentified in npm, PyPI,
+    RubyGems, crates.io or NuGet (see packages/aidentified-packages.yml), so this is remote, not
+    both. The origin is an AWS ELB (mcp-server-prod-246825532.us-west-2.elb.amazonaws.com) fronting
+    a uvicorn server.
+
+server:
+  name: aidentified
+  transport: http
+  url: https://mcp.aidentified.com/mcp
+  protocol_version_negotiated: '2026-06-18'
+  session_header: mcp-session-id
+
+auth:
+  methods:
+    - oauth2
+  oauth2:
+    protected_resource_metadata: https://mcp.aidentified.com/.well-known/oauth-protected-resource/mcp
+    resource: https://mcp.aidentified.com/mcp
+    authorization_server: https://login.aidentified.com/
+    authorization_endpoint: https://app.aidentified.com/oauth/authorize
+    token_endpoint: https://login.aidentified.com/v1/oauth2/token
+    registration_endpoint: https://login.aidentified.com/v1/oauth2/register
+    pkce: S256
+    grant_types:
+      - authorization_code
+      - refresh_token
+      - urn:ietf:params:oauth:grant-type:jwt-bearer
+    scopes_supported_by_resource: []
+    scopes_supported_by_authorization_server:
+      - openid
+      - profile
+      - email
+      - phone
+      - offline_access
+      - full_access
+    bearer_methods_supported:
+      - header
+    discovery:
+      - well-known/aidentified-mcp-oauth-protected-resource.json
+      - well-known/aidentified-login-oauth-authorization-server.json
+    note: >-
+      Dynamic Client Registration (RFC 7591) is advertised, so an agent can in principle self-register
+      — but an Aidentified tenant account is still required to complete the authorization code flow,
+      and the support help center states that API access is arranged through a sales representative.
+
+tools:
+  status: auth-gated
+  tool_count: null
+  note: >-
+    tools/list returns HTTP 401 before any tool is disclosed. The live tool set and its inputSchemas
+    require an authenticated introspection against a real Aidentified tenant. NO tool list is
+    recorded here: Aidentified publishes no llms.txt, no MCP documentation page and no directory
+    listing from which names could be read, and this pipeline does not invent tool names. A future
+    round with a tenant token should POST tools/list and save the result verbatim.
+
+crosswalk:
+  emitted: false
+  reason: >-
+    A ToolCrosswalk binds MCP tools to backing OpenAPI operationIds. Aidentified publishes neither a
+    public OpenAPI nor a readable tool list, so there is nothing on either side of the mapping. An
+    honest absence — not a gap to be filled with guesses.

@@ -1,0 +1,101 @@
+generated: '2026-09-14'
+method: searched
+source: >-
+  Two first-party sources, both public: (1) Aidentified's own Apache-2.0 CLI source at
+  https://github.com/aidentified-llc/matching-api-cli (aidentified_matching_api/token_service.py and
+  constants.py), which is the published client for the bulk contact-matching API; (2) the RFC 8414 /
+  RFC 9728 / OIDC discovery documents probed live at login.aidentified.com and mcp.aidentified.com on
+  2026-09-14 and saved under well-known/.
+docs: https://support.aidentified.com/hc/en-us/articles/52599228720532-How-can-I-get-an-API-key-token
+summary: >-
+  Aidentified runs two distinct, unrelated authentication models. The bulk contact-matching REST API
+  uses a password-grant-shaped login that exchanges an account email and password for a bearer JWT.
+  The MCP server uses standards-compliant OAuth 2.1 with PKCE against a Stytch-backed authorization
+  server on login.aidentified.com. There is no API-key scheme: the help center's answer to
+  "How can I get an API key/token?" is, verbatim, "For all Aidentified API inquiries, please contact
+  your sales representative."
+
+schemes:
+
+  - id: matching_api_bearer
+    type: http
+    scheme: bearer
+    bearer_format: JWT
+    applies_to: https://matching-api.aidentified.com
+    header: 'Authorization: Bearer <token>'
+    token_acquisition:
+      endpoint: POST https://matching-api.aidentified.com/login
+      request_body:
+        email: account email address
+        password: account password
+      response_body:
+        bearer_token: the JWT to present on subsequent calls
+        expires_in: token lifetime in seconds
+      credential_env_vars:
+        - AID_EMAIL
+        - AID_PASSWORD
+      client_caching: >-
+        The first-party CLI caches the token on local disk keyed by a CRC32 of the API base URL and
+        reuses it until expires_in has elapsed.
+    evidence: https://github.com/aidentified-llc/matching-api-cli/blob/main/aidentified_matching_api/token_service.py
+    assessment: >-
+      This is a resource-owner-password exchange in all but name: the long-lived secret an integrator
+      holds is the human account password, not a scoped, revocable API credential. There is no key
+      rotation surface, no scoping, and no per-integration credential documented.
+
+  - id: mcp_oauth2
+    type: oauth2
+    applies_to: https://mcp.aidentified.com/mcp
+    flows:
+      authorizationCode:
+        authorizationUrl: https://app.aidentified.com/oauth/authorize
+        tokenUrl: https://login.aidentified.com/v1/oauth2/token
+        refreshUrl: https://login.aidentified.com/v1/oauth2/token
+        scopes:
+          openid: OpenID Connect subject identifier
+          profile: Basic profile claims
+          email: Email address claim
+          phone: Phone number claim
+          offline_access: Refresh-token issuance
+          full_access: Full access (advertised by the OIDC discovery document only)
+    pkce: S256
+    pkce_required: true
+    grant_types:
+      - authorization_code
+      - refresh_token
+      - urn:ietf:params:oauth:grant-type:jwt-bearer
+    token_endpoint_auth_methods:
+      - client_secret_basic
+      - client_secret_post
+      - none
+    dynamic_client_registration: https://login.aidentified.com/v1/oauth2/register
+    userinfo_endpoint: https://login.aidentified.com/v1/oauth2/userinfo
+    jwks_uri: https://login.aidentified.com/.well-known/jwks.json
+    id_token_signing_alg: RS256
+    issuer: https://login.aidentified.com
+    challenge_observed: >-
+      401 with WWW-Authenticate: Bearer resource_metadata="https://mcp.aidentified.com/.well-known/oauth-protected-resource/mcp"
+    evidence:
+      - well-known/aidentified-login-oauth-authorization-server.json
+      - well-known/aidentified-login-openid-configuration.json
+      - well-known/aidentified-mcp-oauth-protected-resource.json
+    assessment: >-
+      Correct and modern: PKCE-only, RFC 9728 resource metadata, RFC 8414 server metadata, RFC 7591
+      dynamic registration, published JWKS. This is the strongest part of Aidentified's public
+      developer surface and it is entirely undocumented on their own site.
+
+identity_vendor:
+  name: Stytch
+  basis: >-
+    login.aidentified.com is a CNAME to substantial-fig-5730.customers.stytch.com, the JWKS x5c
+    certificate carries O=Stytch, and 404 bodies from that host link to stytch.com error docs. The
+    issuer and every endpoint are on aidentified.com, so the surface is Aidentified's.
+
+gaps:
+  - No API-key or scoped-credential scheme is documented for the REST API.
+  - No mTLS, no signed requests, no OpenID Connect on the REST API.
+  - >-
+    The MCP OAuth server advertises an empty scopes_supported array on the protected resource, so an
+    agent cannot tell from metadata what it is asking permission for.
+  - No public reference documents either scheme; both were reconstructed from first-party source code
+    and live discovery documents.

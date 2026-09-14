@@ -1,0 +1,74 @@
+generated: '2026-09-14'
+method: searched
+source: >-
+  Site sweep of aidentified.com (sitemap.xml walked 2026-09-14), the Zendesk help center at
+  support.aidentified.com (article and section listing via the public Help Center API), and the
+  provider's own client at https://github.com/aidentified-llc/matching-api-cli.
+checked: '2026-09-14'
+
+versioning:
+  scheme: path
+  mechanism: /v1/ prefix on every resource path of the contact-matching API
+  current: v1
+  policy_published: false
+  note: >-
+    A version prefix exists in the URL but no versioning POLICY is published — nothing states how
+    long a version is supported, how a v2 would be introduced, or whether breaking changes can land
+    inside v1.
+
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  note: >-
+    No deprecation policy, no RFC 8594 Sunset/Deprecation header support, and no deprecation notices
+    anywhere on the site or in the help center. No Deprecation pointer is emitted for this provider.
+
+status_page:
+  published: false
+  probed:
+    - url: https://status.aidentified.com/
+      result: NXDOMAIN
+      checked: '2026-09-14'
+  searched: >-
+    No status.* or *.statuspage.io / status.io / instatus / betterstack surface is linked from
+    aidentified.com, the app, or the help center.
+  note: No StatusPage pointer is emitted — there is nothing to point at.
+
+sla:
+  published: false
+  note: >-
+    The Terms & Conditions at https://www.aidentified.com/terms-conditions carry data-protection and
+    security-incident commitments but no uptime or availability SLA.
+
+changelog:
+  published: false
+  probed:
+    - url: https://www.aidentified.com/changelog
+      status: 404
+    - url: https://www.aidentified.com/blog
+      status: 404
+    - url: https://www.aidentified.com/news
+      status: 404
+  note: >-
+    No dated changelog or release notes exist for the platform or the API. Product announcements are
+    issued as PR Newswire press releases rather than as a versioned log. No ChangeLog artifact is
+    emitted.
+
+support:
+  help_center: https://support.aidentified.com/hc/en-us
+  platform: Zendesk (CNAME aidentified.zendesk.com)
+  api_support_path: >-
+    Sales representative. The help center's only API article states that all API inquiries go through
+    a sales rep.
+
+findings:
+  - >-
+    The MCP server at mcp.aidentified.com negotiated MCP protocol version 2026-06-18 during a probe,
+    which is the only version identifier Aidentified exposes for its agent surface. It is not
+    documented anywhere.
+  - >-
+    The installable Python client is pinned at 1.2.0 from 2023-06-21 while its repository was pushed
+    2026-06-04 — a three-year gap between the source and the artifact consumers install.

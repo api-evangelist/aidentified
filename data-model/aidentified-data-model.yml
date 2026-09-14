@@ -1,0 +1,147 @@
+generated: '2026-09-14'
+method: derived
+source: >-
+  https://github.com/aidentified-llc/matching-api-cli — the "Data model" section of Aidentified's own
+  README plus the resource paths and response fields in aidentified_matching_api/*.py, read
+  2026-09-14. Derived from first-party published source; no OpenAPI exists to derive from.
+scope: >-
+  The bulk contact-matching and enrichment API only. The SaaS application's prospect/profile model
+  (300M+ profiles, 16 wealth triggers) is not exposed by any public contract and is NOT modeled here.
+
+entities:
+
+  - name: dataset
+    path: /v1/dataset/
+    description: A customer-defined grouping of dataset-files. Named by the customer.
+    fields:
+      - name: dataset_id
+        type: uuid
+        role: identifier
+      - name: name
+        type: string
+        role: customer-chosen label
+    operations:
+      - GET /v1/dataset/
+      - POST /v1/dataset/
+      - DELETE /v1/dataset/{dataset_id}/
+    relationships:
+      - type: has_many
+        target: dataset-file
+        via: dataset_id
+
+  - name: dataset-file
+    path: /v1/dataset-file/
+    description: >-
+      A UTF-8 comma-separated CSV of contacts uploaded for matching and enrichment. Immutable once
+      its upload completes; it advances through a documented state machine.
+    fields:
+      - name: dataset_file_id
+        type: uuid
+        role: identifier
+      - name: dataset_id
+        type: uuid
+        role: foreign key to dataset
+      - name: name
+        type: string
+      - name: status
+        type: enum
+        role: state machine
+      - name: created_date
+        type: date-time
+      - name: modified_date
+        type: date-time
+      - name: download_url
+        type: uri
+        role: link to the fully-matched output file
+    status_values:
+      - UPLOAD_NOT_STARTED
+      - UPLOAD_IN_PROGRESS
+      - VALIDATION_IN_PROGRESS
+      - VALIDATION_ERROR
+      - MATCHING_IN_PROGRESS
+      - MATCHING_ERROR
+      - MATCHING_FINISHED
+    operations:
+      - GET /v1/dataset-file/
+      - POST /v1/dataset-file/
+      - GET /v1/dataset-file/{dataset_file_id}/
+      - DELETE /v1/dataset-file/{dataset_file_id}/
+      - POST /v1/dataset-file/{dataset_file_id}/initiate-upload/
+      - POST /v1/dataset-file/{dataset_file_id}/complete-upload/
+      - POST /v1/dataset-file/{dataset_file_id}/abort-upload/
+    relationships:
+      - type: belongs_to
+        target: dataset
+        via: dataset_id
+      - type: has_many
+        target: dataset-file-upload-part
+        via: dataset_file_id
+      - type: has_many
+        target: dataset-delta-file
+        via: dataset_file_id
+      - type: has_many
+        target: trigger-file
+        via: dataset_file_id
+
+  - name: dataset-file-upload-part
+    path: /v1/dataset-file-upload-part/
+    description: One part of a multipart CSV upload, created and then completed per chunk.
+    fields:
+      - name: dataset_file_upload_part_id
+        type: uuid
+        role: identifier
+      - name: dataset_file_id
+        type: uuid
+        role: foreign key
+    operations:
+      - POST /v1/dataset-file-upload-part/
+      - POST /v1/dataset-file-upload-part/{dataset_file_upload_part_id}/
+    relationships:
+      - type: belongs_to
+        target: dataset-file
+        via: dataset_file_id
+
+  - name: dataset-delta-file
+    path: /v1/dataset-delta-file/
+    description: >-
+      A nightly CSV produced per dataset-file containing ONLY the records of contacts whose
+      Aidentified attributes changed since the previous run. Delta files are how a customer keeps
+      enrichment current — the whole-file match itself runs only once.
+    operations:
+      - GET /v1/dataset-delta-file/
+      - GET /v1/dataset-delta-file/ (download)
+    relationships:
+      - type: belongs_to
+        target: dataset-file
+        via: dataset_file_id
+
+  - name: trigger-file
+    path: /v1/trigger-file/
+    description: >-
+      A nightly CSV produced per dataset-file listing the most recent Money in Motion / wealth
+      trigger events for each matched contact. This is Aidentified's event surface, delivered as a
+      polled daily file rather than as webhooks or a streaming API.
+    operations:
+      - GET /v1/trigger-file/
+      - GET /v1/trigger-file/ (download)
+    relationships:
+      - type: belongs_to
+        target: dataset-file
+        via: dataset_file_id
+
+entity_count: 5
+relationship_count: 8
+
+notes:
+  - >-
+    The whole graph is file-oriented, not record-oriented: a customer uploads a CSV and collects
+    CSVs back. There is no per-contact GET on this API, so an agent cannot look up a single person
+    through the published surface — that capability exists in the SaaS application and, presumably,
+    behind the OAuth-gated MCP server.
+  - >-
+    trigger-file is the closest thing Aidentified publishes to an event stream. Because it is a
+    nightly file rather than a push, no AsyncAPI or Webhooks artifact is emitted for this provider.
+  - >-
+    Field lists are limited to what the provider's own client and README expose. The enriched output
+    columns (marketed as "200 data attributes") are not enumerated in any public document and are
+    deliberately NOT guessed here.
