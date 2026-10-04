@@ -11,6 +11,21 @@ description: >-
   realtime enrichment API, and a live OAuth-protected Model Context Protocol server at
   mcp.aidentified.com. API access is arranged through a sales representative and no public API
   reference or OpenAPI is published.
+deliveryModel:
+  model: saas
+  license_evidence:
+    not_product:
+    - aidentified-llc/matching-api-cli
+  open_source: unknown
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: low
+  source:
+  - pricing
+  - repository-not-product
+  generated: '2026-09-25'
+  method: derived
 image: https://cdn.prod.website-files.com/684cc996f51fd9e61fd926ba/684f6ebd6781811cd93569ed_logo-aidentified-cube-grad-webclip.png
 url: https://raw.githubusercontent.com/api-evangelist/aidentified/refs/heads/main/apis.yml
 x-type: company
@@ -23,7 +38,7 @@ tags:
 - Company
 - Data Enrichment
 - Wealth Management
-- Financial-Services
+- Financial Services
 - Relationship Intelligence
 - Sales Intelligence
 - Prospecting
@@ -41,6 +56,7 @@ tags_raw:
 - Contact Data
 - Identity Resolution
 - MCP
+- Financial-Services
 apis:
 - name: Aidentified Contact Matching API
   description: >-
