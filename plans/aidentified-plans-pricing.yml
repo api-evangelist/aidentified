@@ -91,3 +91,36 @@ api_pricing:
     A separate DaaS (data-as-a-service) platform page exists at
     https://www.aidentified.com/platform/product-overview---daas but carries no posted prices either.
     There is no published price, quota or overage for API or MCP consumption.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - metered
+  - seat
+  units:
+  - seat
+  plans:
+  - name: Starter
+    access: other
+    model: seat
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - month
+  - name: Premium
+    access: other
+    model: seat
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - month
+  - name: Enterprise
+    access: other
+    model: metered
+    model_how: derived
+    units:
+    - seat
+    periods:
+    - month
