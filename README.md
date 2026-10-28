@@ -64,11 +64,119 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Aidentified is a Wealth Network Intelligence platform for financial advisors, wealth managers, insurance brokers, investment banks and non-profits. Founded in 2017 and headquartered in Boston, it maps a user's existing relationships against more than 300 million professional and consumer profiles and over 16 billion connections to surface the warmest introduction path to any prospect, and monitors 16 wealth events that signal when to reach out.
+Aidentified is a Wealth Network Intelligence platform for financial advisors, wealth managers, insurance brokers, investment banks and non-profits. Founded in 2017 and headquartered in Boston, it maps a user's existing relationships against more than 300 million professional and consumer profiles and over 16 billion connections to surface the warmest introduction path to any prospect, and it monitors 16 wealth events — job changes, liquidity events, insider stock purchases, acquisitions, property transactions and IPO filings — that signal when to reach out. Its machine surface is a bulk contact matching and enrichment API at matching-api.aidentified.com, a marketed realtime enrichment API, and a live OAuth-protected Model Context Protocol server at mcp.aidentified.com. API access is arranged through a sales representative and no public API reference or OpenAPI is published.
 
-Its machine surface is a bulk contact matching and enrichment API at `matching-api.aidentified.com`, a marketed realtime enrichment API, and a live OAuth-protected Model Context Protocol server at `mcp.aidentified.com`. API access is arranged through a sales representative, and no public API reference or OpenAPI is published.
+**Areas:** Company · Data Enrichment · Wealth Management · Financial Services · Relationship Intelligence · Sales Intelligence · Prospecting · Contact Data · Identity Resolution · MCP
 
-- https://www.aidentified.com/
-- https://github.com/aidentified-llc
-- https://support.aidentified.com/hc/en-us
-- https://trust.aidentified.com
+## Aidentified on APIs.io
+
+Everything profiled for Aidentified is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/aidentified/](https://apis.io/providers/aidentified/)** — or go straight to one of the APIs or properties below.
+
+### APIs (1)
+
+- [Aidentified Contact Matching API](https://apis.io/apis/aidentified/aidentified-contact-matching-api/) — Bulk contact matching and enrichment. A customer creates a dataset, uploads a UTF-8 CSV of contacts as a dataset-file via a multipart upload, and…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [aidentified](https://apis.io/servers/aidentified/aidentified/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Aidentified Authentication](https://apis.io/security/aidentified/aidentified-authentication/)
+- [Aidentified Domain Security](https://apis.io/security/aidentified/aidentified-domain-security/)
+- [Aidentified Trust Center](https://apis.io/security/aidentified/aidentified-trust-center/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Aidentified Scopes](https://apis.io/scopes/aidentified/aidentified-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Aidentified Plans Pricing](https://apis.io/plans/aidentified/aidentified-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Aidentified Rate Limits](https://apis.io/rate-limits/aidentified/aidentified-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.aidentified.com/)
+- [Documentation](https://support.aidentified.com/hc/en-us)
+- [Pricing](https://www.aidentified.com/platform/product-overview---saas-signup)
+- [Sign up](https://app.aidentified.com/vip/register)
+- [Support](https://support.aidentified.com/hc/en-us)
+- [Trust centre](https://trust.aidentified.com)
+- [Terms of service](https://www.aidentified.com/terms-conditions)
+- [Privacy policy](https://www.aidentified.com/privacy--policy)
+- [GitHub](https://github.com/aidentified-llc)
+
+## API Evangelist rating
+
+**Kin Score 40.1** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 68.3 |
+| Contract quality | 0.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 2.6 |
+| Developer ergonomics | 50.0 |
+| Access clarity | 85.5 |
+
+**Agent readiness 24.7** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 39.2** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/aidentified/](https://apis.io/providers/aidentified/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Aidentified: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/aidentified/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
